@@ -1,9 +1,13 @@
 #include <SFML/Graphics.hpp>
+#include "include/Board.h"
+
 
 int main()
 {
     auto window = sf::RenderWindow{ { 1920u, 1080u }, "CMake SFML Project" };
     window.setFramerateLimit(144);
+    
+    engine::Board b;
 
     while (window.isOpen())
     {
@@ -16,6 +20,7 @@ int main()
         }
 
         window.clear();
+        window.draw(b);
         window.display();
     }
 }

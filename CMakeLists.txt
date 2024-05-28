@@ -4,7 +4,12 @@ project(BallGame VERSION 1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_executable(BallGame src/main.cpp)
+set(SOURCES 
+    src/main.cpp 
+    src/Board.cpp
+)
+
+add_executable(BallGame ${SOURCES})
 
 target_compile_options(BallGame PRIVATE -Wall -Wextra -Wpedantic)
 target_compile_options(BallGame PRIVATE -Werror)

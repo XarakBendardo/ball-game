@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "include/Board.h"
+#include "include/Ball.h"
 
 
 int main()
@@ -7,7 +8,8 @@ int main()
     auto window = sf::RenderWindow{ { 1920u, 1080u }, "CMake SFML Project" };
     window.setFramerateLimit(144);
     
-    engine::Board b;
+    engine::Board left, right(window.getSize().x - engine::Board::WIDTH);
+    engine::Ball ball(window.getSize().x / 2 - engine::Ball::RADIUS, window.getSize().y / 2 - engine::Ball::RADIUS);
 
     while (window.isOpen())
     {
@@ -20,7 +22,9 @@ int main()
         }
 
         window.clear();
-        window.draw(b);
+        window.draw(left);
+        window.draw(right);
+        window.draw(ball);
         window.display();
     }
 }

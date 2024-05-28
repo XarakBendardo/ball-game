@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(SOURCES 
     src/main.cpp 
     src/Board.cpp
+    src/Ball.cpp
 )
 
 add_executable(BallGame ${SOURCES})

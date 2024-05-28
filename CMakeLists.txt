@@ -5,9 +5,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(SOURCES 
-    src/main.cpp 
     src/Board.cpp
     src/Ball.cpp
+    src/Game.cpp
+    src/main.cpp 
 )
 
 add_executable(BallGame ${SOURCES})

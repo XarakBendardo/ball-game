@@ -5,9 +5,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(SOURCES 
-    src/Board.cpp
-    src/Ball.cpp
-    src/Game.cpp
+    src/engine/Board.cpp
+    src/engine/Ball.cpp
+    src/engine/Game.cpp
     src/main.cpp 
 )
 

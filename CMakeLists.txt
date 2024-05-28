@@ -6,9 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_executable(BallGame src/main.cpp)
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(BallGame PRIVATE -Wall -Wextra -Wpedantic)
-    target_compile_options(BallGame PRIVATE -Werror)
-endif()
+target_compile_options(BallGame PRIVATE -Wall -Wextra -Wpedantic)
+target_compile_options(BallGame PRIVATE -Werror)
 
 target_link_libraries(BallGame sfml-system sfml-window sfml-graphics sfml-audio)

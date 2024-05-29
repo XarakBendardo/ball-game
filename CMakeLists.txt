@@ -4,11 +4,15 @@ project(BallGame VERSION 1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(DIR_SRC src)
+set(DIR_ENGINE ${DIR_SRC}/engine)
+
 set(SOURCES 
-    src/engine/Board.cpp
-    src/engine/Ball.cpp
-    src/engine/Game.cpp
-    src/main.cpp 
+    ${DIR_ENGINE}/Board.cpp
+    ${DIR_ENGINE}/Ball.cpp
+    ${DIR_ENGINE}/GameState.cpp
+    ${DIR_ENGINE}/Game.cpp
+    ${DIR_SRC}/main.cpp 
 )
 
 add_executable(BallGame ${SOURCES})

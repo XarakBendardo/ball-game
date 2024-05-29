@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <stack>
 #include "../include/GameState.h"
 
 #ifndef GAME_H
@@ -22,12 +23,15 @@ class Game
         static Game* instance;
 
         GameStateAbstract* currentState;
+        std::stack<GameStateAbstract*> stateStack;
         sf::RenderWindow* window;
 
         Game();
         ~Game();
         Game(const Game& other) = delete;
         Game& operator=(const Game& other) = delete;
+
+        void changeState(GameStateAbstract* newState);
 };
 } // namespace engine
 

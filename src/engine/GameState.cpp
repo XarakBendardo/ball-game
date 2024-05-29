@@ -3,10 +3,30 @@
 namespace engine
 {
 
-GameStateAbstract::GameStateAbstract(sf::RenderWindow& renderWindow) : window(renderWindow) {}
+GameStateAbstract::GameStateAbstract(sf::RenderWindow& renderWindow) :
+    window(renderWindow), changeRequired(false), finished(false), nextState(nullptr) {}
+
 GameStateAbstract::~GameStateAbstract() {}
 
-GameStateRunning::GameStateRunning(sf::RenderWindow& renderWindow) : GameStateAbstract(renderWindow)
+bool GameStateAbstract::wantsToChange() const { return this->changeRequired; }
+
+bool GameStateAbstract::isFinished() const { return this->finished; }
+
+void GameStateAbstract::resume()
+{
+    this->changeRequired = false;
+    this->nextState = nullptr;
+}
+
+GameStateAbstract* GameStateAbstract::getNextState() const
+{
+    if(!this->finished)
+        throw std::runtime_error("Cannot return next state if current state is not finished.");
+    return this->nextState;
+}
+
+GameStateRunning::GameStateRunning(sf::RenderWindow& renderWindow) :
+    GameStateAbstract(renderWindow), currentMovement(GameStateRunning::BoardsMovement::none)
 {
     this->ball = Ball(this->window.getSize().x / 2 - Ball::RADIUS, this->window.getSize().y / 2 - Ball::RADIUS);
     this->leftBoard = Board(0.f, (this->window.getSize().y - Board::HEIGHT) / 2);
@@ -17,14 +37,13 @@ GameStateRunning::~GameStateRunning() {}
 
 void GameStateRunning::reactToEvent(const sf::Event& event)
 {
-    if (event.type == sf::Event::Closed)
-        this->window.close();
-    else if(event.type == sf::Event::KeyPressed)
+    if(event.type == sf::Event::KeyPressed)
     {
         switch (event.key.code)
         {
         case sf::Keyboard::Escape:
-            this->window.close();
+            this->changeRequired = true;
+            this->finished = true;
             break;
 
         case sf::Keyboard::Up:

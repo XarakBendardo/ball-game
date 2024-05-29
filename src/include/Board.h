@@ -13,6 +13,7 @@ class Board : public sf::Drawable
     public:
         static const float WIDTH;
         static const float HEIGHT;
+        static float boardVelocity;
 
         Board(const float posX = 0.f, const float posY = 0.f);
         Board(const Board& other) = default;

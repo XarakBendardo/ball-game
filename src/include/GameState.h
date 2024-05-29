@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include "../include/Ball.h"
+#include "../include/Board.h"
 
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
@@ -20,6 +22,7 @@ class GameStateAbstract
 class GameStateRunning : public GameStateAbstract
 {
     public:
+        enum BoardsMovement {up, down, none};
         GameStateRunning(sf::RenderWindow& renderWindow);
         virtual void reactToEvent(const sf::Event& event) override;
         virtual void update() override;
@@ -28,6 +31,11 @@ class GameStateRunning : public GameStateAbstract
     private:
         sf::Clock clock;
         float dt;
+        BoardsMovement currentMovement;
+        Ball ball;
+        Board leftBoard, rightBoard;
+
+        void moveBoards(const float diff);
 };
 
 } // namespace engine

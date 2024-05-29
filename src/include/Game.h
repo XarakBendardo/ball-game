@@ -11,6 +11,7 @@ class Game
 {
     public:
         static float boardVelocity;
+        static unsigned int FPSLimit;
 
         static Game& getInstance();
         static void cleanup();

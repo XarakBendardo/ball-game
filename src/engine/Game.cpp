@@ -5,6 +5,7 @@ namespace engine
 
 Game* Game::instance = nullptr;
 float Game::boardVelocity = 500.f;
+unsigned int Game::FPSLimit = 60u;
 
 Game& Game::getInstance()
 {
@@ -23,8 +24,11 @@ void Game::cleanup()
 
 Game::Game() : currentMovement(BoardsMovement::none)
 {
-    this->window = new sf::RenderWindow{ { 1920u, 1080u }, "Ball Game" };
-    this->window->setFramerateLimit(60);
+    this->window = new sf::RenderWindow{
+        {sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height},
+        "Ball Game",
+        sf::Style::Fullscreen};
+    this->window->setFramerateLimit(Game::FPSLimit);
     this->ball = Ball(this->window->getSize().x / 2 - Ball::RADIUS, this->window->getSize().y / 2 - Ball::RADIUS);
     this->leftBoard = Board(0.f, (this->window->getSize().y - Board::HEIGHT) / 2);
     this->rightBoard = Board(this->window->getSize().x - Board::WIDTH, (this->window->getSize().y - Board::HEIGHT) / 2);

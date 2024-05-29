@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "Ball.h"
-#include "Board.h"
+#include "../include/GameState.h"
 
 #ifndef GAME_H
 #define GAME_H
@@ -22,21 +21,13 @@ class Game
     
         static Game* instance;
 
+        GameStateAbstract* currentState;
         sf::RenderWindow* window;
-        Ball ball;
-        Board leftBoard, rightBoard;
-        BoardsMovement currentMovement;
-        sf::Clock clock;
-        float dt;
 
         Game();
         ~Game();
         Game(const Game& other) = delete;
         Game& operator=(const Game& other) = delete;
-        
-        void moveBoards(const float diff);
-        void reactToEvent(sf::Event event);
-        void update();
 };
 } // namespace engine
 

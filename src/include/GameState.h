@@ -11,6 +11,7 @@ class GameStateAbstract
 {
     public:
         GameStateAbstract(sf::RenderWindow& renderWindow);
+        virtual ~GameStateAbstract();
         virtual void reactToEvent(const sf::Event& event) = 0;
         virtual void update() = 0;
         virtual void draw() const = 0;
@@ -23,7 +24,9 @@ class GameStateRunning : public GameStateAbstract
 {
     public:
         enum BoardsMovement {up, down, none};
+
         GameStateRunning(sf::RenderWindow& renderWindow);
+        virtual ~GameStateRunning();
         virtual void reactToEvent(const sf::Event& event) override;
         virtual void update() override;
         virtual void draw() const override;

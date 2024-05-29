@@ -4,8 +4,16 @@ namespace engine
 {
 
 GameStateAbstract::GameStateAbstract(sf::RenderWindow& renderWindow) : window(renderWindow) {}
+GameStateAbstract::~GameStateAbstract() {}
 
-GameStateRunning::GameStateRunning(sf::RenderWindow& renderWindow) : GameStateAbstract(renderWindow) {}
+GameStateRunning::GameStateRunning(sf::RenderWindow& renderWindow) : GameStateAbstract(renderWindow)
+{
+    this->ball = Ball(this->window.getSize().x / 2 - Ball::RADIUS, this->window.getSize().y / 2 - Ball::RADIUS);
+    this->leftBoard = Board(0.f, (this->window.getSize().y - Board::HEIGHT) / 2);
+    this->rightBoard = Board(this->window.getSize().x - Board::WIDTH, (this->window.getSize().y - Board::HEIGHT) / 2);
+}
+
+GameStateRunning::~GameStateRunning() {}
 
 void GameStateRunning::reactToEvent(const sf::Event& event)
 {

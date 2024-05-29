@@ -22,21 +22,20 @@ void Game::cleanup()
         delete Game::instance;
 }
 
-Game::Game() : currentMovement(BoardsMovement::none)
+Game::Game()
 {
     this->window = new sf::RenderWindow{
         {sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height},
         "Ball Game",
         sf::Style::Fullscreen};
     this->window->setFramerateLimit(Game::FPSLimit);
-    this->ball = Ball(this->window->getSize().x / 2 - Ball::RADIUS, this->window->getSize().y / 2 - Ball::RADIUS);
-    this->leftBoard = Board(0.f, (this->window->getSize().y - Board::HEIGHT) / 2);
-    this->rightBoard = Board(this->window->getSize().x - Board::WIDTH, (this->window->getSize().y - Board::HEIGHT) / 2);
+    this->currentState = new GameStateRunning(*this->window);
 }
 
 Game::~Game()
 {
     delete this->window;
+    delete this->currentState;
 }
 
 void Game::run()
@@ -45,82 +44,12 @@ void Game::run()
     {
         for (auto event = sf::Event{}; this->window->pollEvent(event);)
         {
-            this->reactToEvent(event);
+            this->currentState->reactToEvent(event);
         }
-        this->update();
+        this->currentState->update();
         this->window->clear();
-        this->window->draw(this->leftBoard);
-        this->window->draw(this->rightBoard);
-        this->window->draw(this->ball);
+        this->currentState->draw();
         this->window->display();
-    }
-}
-
-void Game::moveBoards(const float diff)
-{
-    this->leftBoard.move(diff);
-    this->rightBoard.move(diff);
-}
-
-void Game::update()
-{
-    this->dt = this->clock.restart().asSeconds();
-    float newPos;
-    switch (this->currentMovement)
-    {
-    case BoardsMovement::up:
-        newPos = this->leftBoard.getPosition().y - Game::boardVelocity * this->dt;
-        if(newPos >= 0.f)
-            this->moveBoards(-Game::boardVelocity * this->dt);
-        break;
-        
-    case BoardsMovement::down:
-        newPos = this->leftBoard.getPosition().y + Game::boardVelocity * this->dt;
-        if(newPos <= this->window->getSize().y - Board::HEIGHT)
-            this->moveBoards(Game::boardVelocity * this->dt);
-        break;
-    
-    default:
-        break;
-    }
-}
-
-void Game::reactToEvent(sf::Event event)
-{
-    if (event.type == sf::Event::Closed)
-        this->window->close();
-    else if(event.type == sf::Event::KeyPressed)
-    {
-        switch (event.key.code)
-        {
-        case sf::Keyboard::Escape:
-            this->window->close();
-            break;
-
-        case sf::Keyboard::Up:
-            this->currentMovement = BoardsMovement::up;
-            break;
-
-        case sf::Keyboard::Down:
-            this->currentMovement = BoardsMovement::down;
-            break;
-        
-        default:
-            break;
-        }
-    }
-    else if(event.type == sf::Event::KeyReleased)
-    {
-        switch (event.key.code)
-        {
-        case sf::Keyboard::Up:
-        case sf::Keyboard::Down:
-            this->currentMovement = BoardsMovement::none;
-            break;
-        
-        default:
-            break;
-        }
     }
 }
 

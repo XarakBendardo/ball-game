@@ -10,6 +10,8 @@ namespace engine
 class Game
 {
     public:
+        static float boardVelocity;
+
         static Game& getInstance();
         static void cleanup();
 
@@ -23,6 +25,8 @@ class Game
         Ball ball;
         Board leftBoard, rightBoard;
         BoardsMovement currentMovement;
+        sf::Clock clock;
+        float dt;
 
         Game();
         ~Game();

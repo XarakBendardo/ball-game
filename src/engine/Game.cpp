@@ -4,6 +4,7 @@ namespace engine
 {
 
 Game* Game::instance = nullptr;
+float Game::boardVelocity = 500.f;
 
 Game& Game::getInstance()
 {
@@ -59,14 +60,15 @@ void Game::moveBoards(const float diff)
 
 void Game::update()
 {
+    this->dt = this->clock.restart().asSeconds();
     switch (this->currentMovement)
     {
     case BoardsMovement::up:
-        this->moveBoards(-1.f);
+        this->moveBoards(-Game::boardVelocity * this->dt);
         break;
         
     case BoardsMovement::down:
-        this->moveBoards(1.f);
+        this->moveBoards(Game::boardVelocity * this->dt);
         break;
     
     default:
@@ -77,9 +79,10 @@ void Game::update()
 void Game::reactToEvent(sf::Event event)
 {
     if (event.type == sf::Event::Closed)
-        return this->window->close();
-    
-    if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
+        this->window->close();
+    else if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+        this->window->close();
+    else if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
         this->currentMovement = BoardsMovement::up;
     else if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
         this->currentMovement = BoardsMovement::down;

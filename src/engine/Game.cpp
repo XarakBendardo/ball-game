@@ -85,14 +85,39 @@ void Game::reactToEvent(sf::Event event)
 {
     if (event.type == sf::Event::Closed)
         this->window->close();
-    else if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-        this->window->close();
-    else if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
-        this->currentMovement = BoardsMovement::up;
-    else if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
-        this->currentMovement = BoardsMovement::down;
-    else if(event.type == sf::Event::KeyReleased && (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Down))
-        this->currentMovement = BoardsMovement::none;
+    else if(event.type == sf::Event::KeyPressed)
+    {
+        switch (event.key.code)
+        {
+        case sf::Keyboard::Escape:
+            this->window->close();
+            break;
+
+        case sf::Keyboard::Up:
+            this->currentMovement = BoardsMovement::up;
+            break;
+
+        case sf::Keyboard::Down:
+            this->currentMovement = BoardsMovement::down;
+            break;
+        
+        default:
+            break;
+        }
+    }
+    else if(event.type == sf::Event::KeyReleased)
+    {
+        switch (event.key.code)
+        {
+        case sf::Keyboard::Up:
+        case sf::Keyboard::Down:
+            this->currentMovement = BoardsMovement::none;
+            break;
+        
+        default:
+            break;
+        }
+    }
 }
 
 } // namespace engine

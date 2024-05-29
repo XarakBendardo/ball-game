@@ -22,4 +22,9 @@ void Board::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(this->sprite, states);
 }
 
+sf::Vector2f Board::getPosition() const
+{
+    return this->sprite.getPosition();
+}
+
 } //namespace engine

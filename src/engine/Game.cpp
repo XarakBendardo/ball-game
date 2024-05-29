@@ -61,14 +61,19 @@ void Game::moveBoards(const float diff)
 void Game::update()
 {
     this->dt = this->clock.restart().asSeconds();
+    float newPos;
     switch (this->currentMovement)
     {
     case BoardsMovement::up:
-        this->moveBoards(-Game::boardVelocity * this->dt);
+        newPos = this->leftBoard.getPosition().y - Game::boardVelocity * this->dt;
+        if(newPos >= 0.f)
+            this->moveBoards(-Game::boardVelocity * this->dt);
         break;
         
     case BoardsMovement::down:
-        this->moveBoards(Game::boardVelocity * this->dt);
+        newPos = this->leftBoard.getPosition().y + Game::boardVelocity * this->dt;
+        if(newPos <= this->window->getSize().y - Board::HEIGHT)
+            this->moveBoards(Game::boardVelocity * this->dt);
         break;
     
     default:

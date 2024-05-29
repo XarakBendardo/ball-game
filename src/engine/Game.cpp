@@ -41,25 +41,23 @@ Game::~Game()
 
 void Game::run()
 {
-    while (this->window->isOpen())
+    while (this->window->isOpen() && this->currentState != nullptr)
     {
         for (auto event = sf::Event{}; this->window->pollEvent(event);)
         {
             this->currentState->reactToEvent(event);
         }
+        
+        this->currentState->update();
+        this->window->clear();
+        this->currentState->draw();
+        this->window->display();
+
         if(this->currentState->wantsToChange())
             this->changeState(this->currentState->getNextState());
-        
-        if(this->currentState != nullptr)
-        {
-            this->currentState->update();
-            this->window->clear();
-            this->currentState->draw();
-            this->window->display();
-        }
-        else
-            this->window->close();
     }
+
+    this->window->close();
 }
 
 void Game::changeState(GameStateAbstract* newState)

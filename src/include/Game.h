@@ -15,7 +15,7 @@ class Game
 
         static Game& getInstance();
         static void cleanup();
-
+        static void init();
         void run();
     private:
         enum BoardsMovement {up, down, none};

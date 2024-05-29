@@ -1,8 +1,10 @@
+#include <iostream>
 #include "../include/GameState.h"
 
 namespace engine
 {
 
+/*---------------------------------------- ABSTRACT ----------------------------------------------*/
 GameStateAbstract::GameStateAbstract(sf::RenderWindow& renderWindow) :
     window(renderWindow), changeRequired(false), finished(false), nextState(nullptr) {}
 
@@ -24,6 +26,85 @@ GameStateAbstract* GameStateAbstract::getNextState() const
         throw std::runtime_error("Cannot return next state if current state is not finished.");
     return this->nextState;
 }
+
+/*---------------------------------------- MENU ----------------------------------------------*/
+std::vector<std::string> GameStateMenu::optionsText = {"PLAY", "EXIT"};
+const unsigned int GameStateMenu::FONT_SIZE = 100u;
+const unsigned int GameStateMenu::DELIMETER_SIZE = 100u;
+sf::Font GameStateMenu::FONT = sf::Font();
+
+GameStateMenu::GameStateMenu(sf::RenderWindow& renderWindow) : GameStateAbstract(renderWindow), idx(0)
+{
+    size_t pos = 0;
+    sf::Vector2f position;
+    unsigned int height = GameStateMenu::optionsText.size() * GameStateMenu::FONT_SIZE + (GameStateMenu::optionsText.size() - 1) * GameStateMenu::DELIMETER_SIZE;
+    unsigned int top = (this->window.getSize().y - height) / 2;
+    for (const auto& option : GameStateMenu::optionsText)
+    {
+        sf::Text text(option, GameStateMenu::FONT, GameStateMenu::FONT_SIZE);
+        position = {
+            static_cast<float>((this->window.getSize().x - text.getGlobalBounds().width) / 2),
+            static_cast<float>(top + pos * (GameStateMenu::FONT_SIZE + GameStateMenu::DELIMETER_SIZE))
+        };
+        text.setPosition(position);
+        this->options.push_back(text);
+        ++pos;
+    }
+}
+
+GameStateMenu::~GameStateMenu() {}
+
+void GameStateMenu::reactToEvent(const sf::Event& event)
+{
+    if(event.type != sf::Event::KeyPressed)
+        return;
+    
+    switch (event.key.code)
+    {
+    case sf::Keyboard::Escape:
+        this->changeRequired = true;
+        this->finished = true;
+        break;
+
+    case sf::Keyboard::Up:
+        if(this->idx > 0)
+            --this->idx;
+        else
+            this->idx = static_cast<unsigned short>(this->options.size() - 1);
+        break;
+    
+    case sf::Keyboard::Down:
+        if(this->idx < static_cast<unsigned short>(this->options.size() - 1))
+            ++this->idx;
+        else
+            this->idx = 0;
+        break;
+    
+    default:
+        break;
+    }
+}
+
+void GameStateMenu::update()
+{
+    for(size_t i = 0; i < this->options.size(); ++i)
+    {
+        if(i == idx)
+            this->options[i].setFillColor(sf::Color::Red);
+        else
+            this->options[i].setFillColor(sf::Color::White);
+    }
+}
+
+void GameStateMenu::draw() const
+{
+    for(const auto& option : this->options)
+    {
+        this->window.draw(option);
+    }
+}
+
+/*---------------------------------------- RUNNING ----------------------------------------------*/
 
 GameStateRunning::GameStateRunning(sf::RenderWindow& renderWindow) :
     GameStateAbstract(renderWindow), currentMovement(GameStateRunning::BoardsMovement::none)

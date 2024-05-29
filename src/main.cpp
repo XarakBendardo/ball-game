@@ -6,6 +6,7 @@
 
 int main()
 {
+    engine::Game::init();
     auto& game = engine::Game::getInstance();
     game.run();
     engine::Game::cleanup();

@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include <string>
 #include "../include/Ball.h"
 #include "../include/Board.h"
 
@@ -35,12 +37,37 @@ class GameStateAbstract
         GameStateAbstract* nextState;
 };
 
+class GameStateMenu : public GameStateAbstract
+{
+    public:
+        static std::vector<std::string> optionsText;
+        static const unsigned int FONT_SIZE;
+        static const unsigned int DELIMETER_SIZE;
+        static sf::Font FONT;
+
+        GameStateMenu() = delete;
+        GameStateMenu(const GameStateMenu& other) = default;
+        GameStateMenu(sf::RenderWindow& renderWindow);
+        GameStateMenu& operator=(const GameStateMenu& other) = default;
+        virtual ~GameStateMenu();
+        virtual void reactToEvent(const sf::Event& event) override;
+        virtual void update() override;
+        virtual void draw() const override;
+
+    private:
+        std::vector<sf::Text> options;
+        unsigned short idx;
+};
+
 class GameStateRunning : public GameStateAbstract
 {
     public:
         enum BoardsMovement {up, down, none};
 
+        GameStateRunning() = delete;
+        GameStateRunning(const GameStateRunning& other) = default;
         GameStateRunning(sf::RenderWindow& renderWindow);
+        GameStateRunning& operator=(const GameStateRunning& other) = default;
         virtual ~GameStateRunning();
         virtual void reactToEvent(const sf::Event& event) override;
         virtual void update() override;

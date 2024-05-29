@@ -1,4 +1,5 @@
 #include "../include/Game.h"
+#include "../include/paths.h"
 
 namespace engine
 {
@@ -29,7 +30,7 @@ Game::Game()
         "Ball Game",
         sf::Style::Fullscreen};
     this->window->setFramerateLimit(Game::FPSLimit);
-    this->currentState = new GameStateRunning(*this->window);
+    this->currentState = new GameStateMenu(*this->window);
     this->stateStack.push(this->currentState);
 }
 
@@ -37,6 +38,11 @@ Game::~Game()
 {
     delete this->window;
     delete this->currentState;
+}
+
+void Game::init()
+{
+    GameStateMenu::FONT.loadFromFile(paths::FONTS_DIR + "/Pacifico.ttf");
 }
 
 void Game::run()

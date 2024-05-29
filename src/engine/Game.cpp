@@ -37,7 +37,11 @@ Game::Game()
 Game::~Game()
 {
     delete this->window;
-    delete this->currentState;
+    while(!this->stateStack.empty())
+    {
+        delete this->stateStack.top();
+        this->stateStack.pop();
+    }
 }
 
 void Game::init()
@@ -80,7 +84,15 @@ void Game::changeState(GameStateAbstract* newState)
         this->currentState = newState;
     }
     else
-        this->currentState = this->stateStack.empty() ? nullptr : this->stateStack.top();
+    {
+        if(this->stateStack.empty())
+            this->currentState = nullptr;
+        else
+        {
+            this->currentState = this->stateStack.top();
+            this->currentState->resume();
+        }
+    }
 }
 
 } // namespace engine

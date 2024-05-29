@@ -22,8 +22,8 @@ void GameStateAbstract::resume()
 
 GameStateAbstract* GameStateAbstract::getNextState() const
 {
-    if(!this->finished)
-        throw std::runtime_error("Cannot return next state if current state is not finished.");
+    if(!this->changeRequired)
+        throw std::runtime_error("Cannot return next state if current state does not require change.");
     return this->nextState;
 }
 
@@ -33,7 +33,8 @@ const unsigned int GameStateMenu::FONT_SIZE = 100u;
 const unsigned int GameStateMenu::DELIMETER_SIZE = 100u;
 sf::Font GameStateMenu::FONT = sf::Font();
 
-GameStateMenu::GameStateMenu(sf::RenderWindow& renderWindow) : GameStateAbstract(renderWindow), idx(0)
+GameStateMenu::GameStateMenu(sf::RenderWindow& renderWindow, const bool isPauseMenu) :
+    GameStateAbstract(renderWindow), idx(0), pauseMenu(isPauseMenu)
 {
     size_t pos = 0;
     sf::Vector2f position;
@@ -78,6 +79,18 @@ void GameStateMenu::reactToEvent(const sf::Event& event)
             ++this->idx;
         else
             this->idx = 0;
+        break;
+
+    case sf::Keyboard::Enter:
+        this->changeRequired = true;
+        this->finished = true;
+        if(this->optionsText[idx] == "PLAY")
+        {
+            if(!this->pauseMenu)
+                this->nextState = new GameStateRunning(this->window);
+        }
+        else if(this->optionsText[idx] == "EXIT")
+            this->window.close();
         break;
     
     default:
@@ -124,7 +137,7 @@ void GameStateRunning::reactToEvent(const sf::Event& event)
         {
         case sf::Keyboard::Escape:
             this->changeRequired = true;
-            this->finished = true;
+            this->nextState = new GameStateMenu(this->window, true);
             break;
 
         case sf::Keyboard::Up:

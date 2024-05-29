@@ -47,7 +47,7 @@ class GameStateMenu : public GameStateAbstract
 
         GameStateMenu() = delete;
         GameStateMenu(const GameStateMenu& other) = default;
-        GameStateMenu(sf::RenderWindow& renderWindow);
+        GameStateMenu(sf::RenderWindow& renderWindow, const bool isPauseMenu = false);
         GameStateMenu& operator=(const GameStateMenu& other) = default;
         virtual ~GameStateMenu();
         virtual void reactToEvent(const sf::Event& event) override;
@@ -57,6 +57,7 @@ class GameStateMenu : public GameStateAbstract
     private:
         std::vector<sf::Text> options;
         unsigned short idx;
+        bool pauseMenu;
 };
 
 class GameStateRunning : public GameStateAbstract

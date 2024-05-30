@@ -10,7 +10,6 @@ namespace engine
 class Game
 {
     public:
-        static float boardVelocity;
         static unsigned int FPSLimit;
 
         static Game& getInstance();
@@ -18,8 +17,6 @@ class Game
         static void init();
         void run();
     private:
-        enum BoardsMovement {up, down, none};
-    
         static Game* instance;
 
         GameStateAbstract* currentState;

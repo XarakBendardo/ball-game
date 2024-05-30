@@ -1,4 +1,4 @@
-#include <iostream>
+#include <random>
 #include "../include/GameState.h"
 
 namespace engine
@@ -171,6 +171,11 @@ void GameStateRunning::moveBoards(const float diff)
 {
     this->leftBoard.move(diff);
     this->rightBoard.move(diff);
+}
+
+void GameStateRunning::moveBall(const float diffX, const float diffY)
+{
+    this->ball.move(diffX, diffY);
 }
 
 void GameStateRunning::update()

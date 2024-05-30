@@ -82,6 +82,7 @@ class GameStateRunning : public GameStateAbstract
         Board leftBoard, rightBoard;
 
         void moveBoards(const float diff);
+        void moveBall(const float diffX, const float diffY);
 };
 
 } // namespace engine

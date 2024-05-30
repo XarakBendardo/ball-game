@@ -1,3 +1,4 @@
+#include <random>
 #include "../include/Game.h"
 #include "../include/paths.h"
 
@@ -5,7 +6,6 @@ namespace engine
 {
 
 Game* Game::instance = nullptr;
-float Game::boardVelocity = 500.f;
 unsigned int Game::FPSLimit = 60u;
 
 Game& Game::getInstance()
@@ -46,6 +46,7 @@ Game::~Game()
 
 void Game::init()
 {
+    std::srand(std::time(0));
     GameStateMenu::FONT.loadFromFile(paths::FONTS_DIR + "/Pacifico.ttf");
 }
 

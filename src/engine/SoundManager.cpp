@@ -1,6 +1,5 @@
 #include "../include/SoundManager.h"
 #include "../include/paths.h"
-#include <iostream>
 
 namespace engine
 {

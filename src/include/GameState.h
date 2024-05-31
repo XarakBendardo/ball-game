@@ -29,7 +29,7 @@ class GameStateAbstract
         THROWS an error, if called when wantsToChange() is false therefore should always be preceded with wantsToChange() check.*/
         GameStateAbstract* getNextState() const;
 
-        void resume();
+        virtual void resume();
 
     protected:
         sf::RenderWindow& window;
@@ -72,15 +72,18 @@ class GameStateRunning : public GameStateAbstract
         virtual void reactToEvent(const sf::Event& event) override;
         virtual void update() override;
         virtual void draw() const override;
+        virtual void resume() override;
 
     private:
         sf::Clock clock;
         float dt;
         BoardsMovement currentMovement;
         Ball ball;
+        sf::Vector2f ballVelocity;
         Board leftBoard, rightBoard;
 
         void moveBoards(const float diff);
+        void checkCollisions();
         void moveBall(const float diffX, const float diffY);
 };
 

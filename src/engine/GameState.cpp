@@ -129,6 +129,12 @@ GameStateRunning::GameStateRunning(sf::RenderWindow& renderWindow) :
 
 GameStateRunning::~GameStateRunning() {}
 
+void GameStateRunning::resume()
+{
+    GameStateAbstract::resume();
+    this->clock.restart();
+}
+
 void GameStateRunning::reactToEvent(const sf::Event& event)
 {
     if(event.type == sf::Event::KeyPressed)
@@ -178,6 +184,33 @@ void GameStateRunning::moveBall(const float diffX, const float diffY)
     this->ball.move(diffX, diffY);
 }
 
+void GameStateRunning::checkCollisions()
+{
+    auto ballPos = this->ball.getCenterPosition();
+
+    if(ballPos.x <= Ball::RADIUS
+    && this->ball.velocity.x <= 0.f)
+    {
+        this->ball.velocity.x = -this->ball.velocity.x;
+    }
+    else if(ballPos.x >= this->window.getSize().x - Ball::RADIUS
+    && this->ball.velocity.x >= 0.f)
+    {
+        this->ball.velocity.x = -this->ball.velocity.x;
+    }
+
+    if(ballPos.y <= Ball::RADIUS
+    && this->ball.velocity.y <= 0.f)
+    {
+        this->ball.velocity.y = -this->ball.velocity.y;
+    }
+    else if(ballPos.y >= this->window.getSize().y - Ball::RADIUS
+    && this->ball.velocity.y >= 0.f)
+    {
+        this->ball.velocity.y = -this->ball.velocity.y;
+    }
+}
+
 void GameStateRunning::update()
 {
     this->dt = this->clock.restart().asSeconds();
@@ -199,6 +232,9 @@ void GameStateRunning::update()
     default:
         break;
     }
+
+    this->moveBall(this->ball.velocity.x * this->dt, this->ball.velocity.y * this->dt);
+    this->checkCollisions();
 }
 
 void GameStateRunning::draw() const

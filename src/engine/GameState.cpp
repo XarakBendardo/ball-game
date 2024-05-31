@@ -29,7 +29,7 @@ GameStateAbstract* GameStateAbstract::getNextState() const
 }
 
 /*---------------------------------------- MENU ----------------------------------------------*/
-std::vector<std::string> GameStateMenu::optionsText = {"PLAY", "EXIT"};
+std::vector<std::string> GameStateMenu::optionsText = {"PLAY", "NEW GAME", "EXIT"};
 const unsigned int GameStateMenu::FONT_SIZE = 100u;
 const unsigned int GameStateMenu::DELIMETER_SIZE = 100u;
 
@@ -89,6 +89,8 @@ void GameStateMenu::reactToEvent(const sf::Event& event)
             if(!this->pauseMenu)
                 this->nextState = new GameStateRunning(this->window);
         }
+        else if(this->optionsText[idx] == "NEW GAME")
+            this->nextState = new GameStateRunning(this->window);
         else if(this->optionsText[idx] == "EXIT")
             this->window.close();
         break;

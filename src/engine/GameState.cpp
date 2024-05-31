@@ -1,5 +1,6 @@
 #include <random>
 #include "../include/GameState.h"
+#include "../include/gameconfig.h"
 
 namespace engine
 {
@@ -31,7 +32,6 @@ GameStateAbstract* GameStateAbstract::getNextState() const
 std::vector<std::string> GameStateMenu::optionsText = {"PLAY", "EXIT"};
 const unsigned int GameStateMenu::FONT_SIZE = 100u;
 const unsigned int GameStateMenu::DELIMETER_SIZE = 100u;
-sf::Font GameStateMenu::FONT = sf::Font();
 
 GameStateMenu::GameStateMenu(sf::RenderWindow& renderWindow, const bool isPauseMenu) :
     GameStateAbstract(renderWindow), idx(0), pauseMenu(isPauseMenu)
@@ -42,7 +42,7 @@ GameStateMenu::GameStateMenu(sf::RenderWindow& renderWindow, const bool isPauseM
     unsigned int top = (this->window.getSize().y - height) / 2;
     for (const auto& option : GameStateMenu::optionsText)
     {
-        sf::Text text(option, GameStateMenu::FONT, GameStateMenu::FONT_SIZE);
+        sf::Text text(option, config::FONT, GameStateMenu::FONT_SIZE);
         position = {
             static_cast<float>((this->window.getSize().x - text.getGlobalBounds().width) / 2),
             static_cast<float>(top + pos * (GameStateMenu::FONT_SIZE + GameStateMenu::DELIMETER_SIZE))

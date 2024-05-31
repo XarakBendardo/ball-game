@@ -6,8 +6,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(DIR_SRC src)
 set(DIR_ENGINE ${DIR_SRC}/engine)
+set(DIR_CONFIG ${DIR_SRC}/config)
 
-set(SOURCES 
+set(SOURCES
+    ${DIR_CONFIG}/gameconfig.cpp
     ${DIR_ENGINE}/Board.cpp
     ${DIR_ENGINE}/Ball.cpp
     ${DIR_ENGINE}/GameState.cpp

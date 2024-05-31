@@ -10,8 +10,6 @@ namespace engine
 class Game
 {
     public:
-        static unsigned int FPSLimit;
-
         static Game& getInstance();
         static void cleanup();
         static void init();

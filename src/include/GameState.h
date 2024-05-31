@@ -43,7 +43,6 @@ class GameStateMenu : public GameStateAbstract
         static std::vector<std::string> optionsText;
         static const unsigned int FONT_SIZE;
         static const unsigned int DELIMETER_SIZE;
-        static sf::Font FONT;
 
         GameStateMenu() = delete;
         GameStateMenu(const GameStateMenu& other) = default;

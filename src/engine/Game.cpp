@@ -1,12 +1,12 @@
 #include <random>
 #include "../include/Game.h"
 #include "../include/paths.h"
+#include "../include/gameconfig.h"
 
 namespace engine
 {
 
 Game* Game::instance = nullptr;
-unsigned int Game::FPSLimit = 60u;
 
 Game& Game::getInstance()
 {
@@ -29,7 +29,7 @@ Game::Game()
         {sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height},
         "Ball Game",
         sf::Style::Fullscreen};
-    this->window->setFramerateLimit(Game::FPSLimit);
+    this->window->setFramerateLimit(config::FPSLimit);
     this->currentState = new GameStateMenu(*this->window);
     this->stateStack.push(this->currentState);
 }
@@ -47,7 +47,8 @@ Game::~Game()
 void Game::init()
 {
     std::srand(std::time(0));
-    GameStateMenu::FONT.loadFromFile(paths::FONTS_DIR + "/Pacifico.ttf");
+    config::FPSLimit = 60u;
+    config::FONT.loadFromFile(paths::FONTS_DIR + "/Pacifico.ttf");
 }
 
 void Game::run()

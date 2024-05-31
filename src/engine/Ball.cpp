@@ -5,7 +5,7 @@ namespace engine
 
 const float Ball::RADIUS = 40.f;
 
-Ball::Ball(const float posX, const float posY) : velocity{1920.f, 1080.f}
+Ball::Ball(const float posX, const float posY) : velocity{1000.f, 1000.f}
 {
     this->sprite = sf::CircleShape(Ball::RADIUS);
     this->sprite.setPosition(posX, posY);

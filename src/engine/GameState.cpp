@@ -187,27 +187,49 @@ void GameStateRunning::moveBall(const float diffX, const float diffY)
 void GameStateRunning::checkCollisions()
 {
     auto ballPos = this->ball.getCenterPosition();
+    bool colX = false, colY = false;
 
-    if(ballPos.x <= Ball::RADIUS
-    && this->ball.velocity.x <= 0.f)
+    if(ballPos.x <= Ball::RADIUS + Board::WIDTH
+    && this->ballVelocity.x <= 0.f)
     {
-        this->ball.velocity.x = -this->ball.velocity.x;
+        if(ballPos.y >= this->leftBoard.getPosition().y
+        && ballPos.y <= this->leftBoard.getPosition().y + Board::HEIGHT)
+        {
+            this->ball.velocity.x = -this->ball.velocity.x;
+            colX = true;
+        }
     }
-    else if(ballPos.x >= this->window.getSize().x - Ball::RADIUS
-    && this->ball.velocity.x >= 0.f)
+    else if(ballPos.x >= this->window.getSize().x - Ball::RADIUS - Board::WIDTH)
     {
-        this->ball.velocity.x = -this->ball.velocity.x;
+        if(ballPos.y >= this->rightBoard.getPosition().y
+        && ballPos.y <= this->rightBoard.getPosition().y + Board::HEIGHT)
+        {
+            this->ball.velocity.x = -this->ball.velocity.x;
+            colX = true;
+        }
     }
 
-    if(ballPos.y <= Ball::RADIUS
-    && this->ball.velocity.y <= 0.f)
+    if(!colX)
     {
-        this->ball.velocity.y = -this->ball.velocity.y;
+        if(ballPos.x <= Ball::RADIUS
+        || ballPos.x >= this->window.getSize().x - Ball::RADIUS)
+        {
+            this->ball.velocity = {0.f, 0.f};
+        }
     }
-    else if(ballPos.y >= this->window.getSize().y - Ball::RADIUS
-    && this->ball.velocity.y >= 0.f)
+    
+    if(!colY)
     {
-        this->ball.velocity.y = -this->ball.velocity.y;
+        if(ballPos.y <= Ball::RADIUS
+        && this->ball.velocity.y <= 0.f)
+        {
+            this->ball.velocity.y = -this->ball.velocity.y;
+        }
+        else if(ballPos.y >= this->window.getSize().y - Ball::RADIUS
+        && this->ball.velocity.y >= 0.f)
+        {
+            this->ball.velocity.y = -this->ball.velocity.y;
+        }
     }
 }
 

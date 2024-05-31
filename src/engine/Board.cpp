@@ -5,7 +5,7 @@ namespace engine
 
 const float Board::WIDTH = 20.f;
 const float Board::HEIGHT = 200.f;
-float Board::boardVelocity = 500.f;
+float Board::boardVelocity = 1000.f;
 
 Board::Board(const float posX, const float posY)
 {

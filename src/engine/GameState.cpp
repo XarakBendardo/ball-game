@@ -1,6 +1,7 @@
 #include <random>
 #include "../include/GameState.h"
 #include "../include/gameconfig.h"
+#include "../include/SoundManager.h"
 
 namespace engine
 {
@@ -72,6 +73,7 @@ void GameStateMenu::reactToEvent(const sf::Event& event)
             --this->idx;
         else
             this->idx = static_cast<unsigned short>(this->options.size() - 1);
+        SoundManager::playSound(SoundManager::Sound::optionChange);
         break;
     
     case sf::Keyboard::Down:
@@ -79,6 +81,7 @@ void GameStateMenu::reactToEvent(const sf::Event& event)
             ++this->idx;
         else
             this->idx = 0;
+        SoundManager::playSound(SoundManager::Sound::optionChange);
         break;
 
     case sf::Keyboard::Enter:
@@ -93,6 +96,7 @@ void GameStateMenu::reactToEvent(const sf::Event& event)
             this->nextState = new GameStateRunning(this->window);
         else if(this->optionsText[idx] == "EXIT")
             this->window.close();
+        SoundManager::playSound(SoundManager::Sound::optionChoose);
         break;
     
     default:
@@ -217,6 +221,7 @@ void GameStateRunning::checkCollisions()
             this->ball.velocity.x = -this->ball.velocity.x;
             this->lastXCollision = GameStateRunning::XCollision::left;
             collidedWithBoard = true;
+            SoundManager::playSound(SoundManager::Sound::ballRebound);
         }
     }
     else if(ballPos.x >= this->window.getSize().x - Ball::RADIUS - Board::WIDTH
@@ -228,6 +233,7 @@ void GameStateRunning::checkCollisions()
             this->ball.velocity.x = -this->ball.velocity.x;
             this->lastXCollision = GameStateRunning::XCollision::right;
             collidedWithBoard = true;
+            SoundManager::playSound(SoundManager::Sound::ballRebound);
         }
     }
 
@@ -237,12 +243,14 @@ void GameStateRunning::checkCollisions()
     {
         this->ball.velocity = {0.f, 0.f};
         this->lastXCollision = GameStateRunning::XCollision::left;
+        SoundManager::playSound(SoundManager::Sound::ballRebound);
     }
     else if(ballPos.x >= this->window.getSize().x - Ball::RADIUS
     && this->lastXCollision != GameStateRunning::XCollision::right)
     {
         this->ball.velocity = {0.f, 0.f};
         this->lastXCollision = GameStateRunning::XCollision::right;
+        SoundManager::playSound(SoundManager::Sound::ballRebound);
     }
     
     // up/down walls
@@ -251,12 +259,14 @@ void GameStateRunning::checkCollisions()
     {
         this->ball.velocity.y = -this->ball.velocity.y;
         this->lastYCollision = GameStateRunning::YCollision::up;
+        SoundManager::playSound(SoundManager::Sound::ballRebound);
     }
     else if(ballPos.y >= this->window.getSize().y - Ball::RADIUS
     && this->lastYCollision != GameStateRunning::YCollision::down)
     {
         this->ball.velocity.y = -this->ball.velocity.y;
         this->lastYCollision = GameStateRunning::YCollision::down;
+        SoundManager::playSound(SoundManager::Sound::ballRebound);
     }
 
     if(collidedWithBoard)

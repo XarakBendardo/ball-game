@@ -12,6 +12,7 @@ set(SOURCES
     ${DIR_CONFIG}/gameconfig.cpp
     ${DIR_ENGINE}/Board.cpp
     ${DIR_ENGINE}/Ball.cpp
+    ${DIR_ENGINE}/SoundManager.cpp
     ${DIR_ENGINE}/GameState.cpp
     ${DIR_ENGINE}/Game.cpp
     ${DIR_SRC}/main.cpp 

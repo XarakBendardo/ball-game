@@ -2,6 +2,7 @@
 #include "../include/Game.h"
 #include "../include/paths.h"
 #include "../include/gameconfig.h"
+#include "../include/SoundManager.h"
 
 namespace engine
 {
@@ -49,6 +50,7 @@ void Game::init()
     std::srand(std::time(0));
     config::FPSLimit = 60u;
     config::FONT.loadFromFile(paths::FONTS_DIR + "/Pacifico.ttf");
+    SoundManager::init();
 }
 
 void Game::run()

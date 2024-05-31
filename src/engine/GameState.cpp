@@ -29,7 +29,7 @@ GameStateAbstract* GameStateAbstract::getNextState() const
 }
 
 /*---------------------------------------- MENU ----------------------------------------------*/
-std::vector<std::string> GameStateMenu::optionsText = {"PLAY", "NEW GAME", "EXIT"};
+const std::vector<std::string> GameStateMenu::optionsText = {"PLAY", "NEW GAME", "EXIT"};
 const unsigned int GameStateMenu::FONT_SIZE = 100u;
 const unsigned int GameStateMenu::DELIMETER_SIZE = 100u;
 
@@ -125,11 +125,14 @@ GameStateRunning::GameStateRunning(sf::RenderWindow& renderWindow) :
     GameStateAbstract(renderWindow),
     currentMovement(GameStateRunning::BoardsMovement::none),
     lastXCollision(GameStateRunning::XCollision::none),
-    lastYCollision(GameStateRunning::YCollision::none)
+    lastYCollision(GameStateRunning::YCollision::none),
+    scoreCount(0)
 {
     this->ball = Ball(this->window.getSize().x / 2 - Ball::RADIUS, this->window.getSize().y / 2 - Ball::RADIUS);
     this->leftBoard = Board(0.f, (this->window.getSize().y - Board::HEIGHT) / 2);
     this->rightBoard = Board(this->window.getSize().x - Board::WIDTH, (this->window.getSize().y - Board::HEIGHT) / 2);
+    this->score = {std::string("SCORE: ") + std::to_string(scoreCount), config::FONT, 40u};
+    this->score.setPosition(0, 0);
 }
 
 GameStateRunning::~GameStateRunning() {}
@@ -189,9 +192,20 @@ void GameStateRunning::moveBall(const float diffX, const float diffY)
     this->ball.move(diffX, diffY);
 }
 
+void GameStateRunning::updateScore()
+{
+    ++this->scoreCount;
+    this->score.setString(std::string("SCORE: ") + std::to_string(this->scoreCount));
+    if(this->scoreCount % 10 == 0)
+        this->score.setFillColor(sf::Color::Red);
+    else
+        this->score.setFillColor(sf::Color::White);
+}
+
 void GameStateRunning::checkCollisions()
 {
     auto ballPos = this->ball.getCenterPosition();
+    bool collidedWithBoard = false;
     
     //boards
     if(ballPos.x <= Ball::RADIUS + Board::WIDTH
@@ -202,6 +216,7 @@ void GameStateRunning::checkCollisions()
         {
             this->ball.velocity.x = -this->ball.velocity.x;
             this->lastXCollision = GameStateRunning::XCollision::left;
+            collidedWithBoard = true;
         }
     }
     else if(ballPos.x >= this->window.getSize().x - Ball::RADIUS - Board::WIDTH
@@ -212,6 +227,7 @@ void GameStateRunning::checkCollisions()
         {
             this->ball.velocity.x = -this->ball.velocity.x;
             this->lastXCollision = GameStateRunning::XCollision::right;
+            collidedWithBoard = true;
         }
     }
 
@@ -242,6 +258,9 @@ void GameStateRunning::checkCollisions()
         this->ball.velocity.y = -this->ball.velocity.y;
         this->lastYCollision = GameStateRunning::YCollision::down;
     }
+
+    if(collidedWithBoard)
+        this->updateScore();
 }
 
 void GameStateRunning::update()
@@ -275,6 +294,7 @@ void GameStateRunning::draw() const
     this->window.draw(this->leftBoard);
     this->window.draw(this->rightBoard);
     this->window.draw(this->ball);
+    this->window.draw(this->score);
 }
 
 } // namespace engine

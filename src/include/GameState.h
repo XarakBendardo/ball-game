@@ -40,7 +40,7 @@ class GameStateAbstract
 class GameStateMenu : public GameStateAbstract
 {
     public:
-        static std::vector<std::string> optionsText;
+        static const std::vector<std::string> optionsText;
         static const unsigned int FONT_SIZE;
         static const unsigned int DELIMETER_SIZE;
 
@@ -85,10 +85,13 @@ class GameStateRunning : public GameStateAbstract
         Board leftBoard, rightBoard;
         XCollision lastXCollision;
         YCollision lastYCollision;
+        unsigned long scoreCount;
+        sf::Text score;
 
         void moveBoards(const float diff);
         void checkCollisions();
         void moveBall(const float diffX, const float diffY);
+        void updateScore();
 };
 
 } // namespace engine

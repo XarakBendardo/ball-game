@@ -62,7 +62,9 @@ class GameStateMenu : public GameStateAbstract
 class GameStateRunning : public GameStateAbstract
 {
     public:
-        enum BoardsMovement {up, down, none};
+        enum class BoardsMovement {up, down, none};
+        enum class XCollision {left, right, none};
+        enum class YCollision {up, down, none};
 
         GameStateRunning() = delete;
         GameStateRunning(const GameStateRunning& other) = default;
@@ -81,6 +83,8 @@ class GameStateRunning : public GameStateAbstract
         Ball ball;
         sf::Vector2f ballVelocity;
         Board leftBoard, rightBoard;
+        XCollision lastXCollision;
+        YCollision lastYCollision;
 
         void moveBoards(const float diff);
         void checkCollisions();

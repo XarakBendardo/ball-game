@@ -122,7 +122,10 @@ void GameStateMenu::draw() const
 /*---------------------------------------- RUNNING ----------------------------------------------*/
 
 GameStateRunning::GameStateRunning(sf::RenderWindow& renderWindow) :
-    GameStateAbstract(renderWindow), currentMovement(GameStateRunning::BoardsMovement::none)
+    GameStateAbstract(renderWindow),
+    currentMovement(GameStateRunning::BoardsMovement::none),
+    lastXCollision(GameStateRunning::XCollision::none),
+    lastYCollision(GameStateRunning::YCollision::none)
 {
     this->ball = Ball(this->window.getSize().x / 2 - Ball::RADIUS, this->window.getSize().y / 2 - Ball::RADIUS);
     this->leftBoard = Board(0.f, (this->window.getSize().y - Board::HEIGHT) / 2);
@@ -189,49 +192,55 @@ void GameStateRunning::moveBall(const float diffX, const float diffY)
 void GameStateRunning::checkCollisions()
 {
     auto ballPos = this->ball.getCenterPosition();
-    bool colX = false, colY = false;
-
+    
+    //boards
     if(ballPos.x <= Ball::RADIUS + Board::WIDTH
-    && this->ballVelocity.x <= 0.f)
+    && this->lastXCollision != GameStateRunning::XCollision::left)
     {
         if(ballPos.y >= this->leftBoard.getPosition().y
         && ballPos.y <= this->leftBoard.getPosition().y + Board::HEIGHT)
         {
             this->ball.velocity.x = -this->ball.velocity.x;
-            colX = true;
+            this->lastXCollision = GameStateRunning::XCollision::left;
         }
     }
-    else if(ballPos.x >= this->window.getSize().x - Ball::RADIUS - Board::WIDTH)
+    else if(ballPos.x >= this->window.getSize().x - Ball::RADIUS - Board::WIDTH
+    && this->lastXCollision != GameStateRunning::XCollision::right)
     {
         if(ballPos.y >= this->rightBoard.getPosition().y
         && ballPos.y <= this->rightBoard.getPosition().y + Board::HEIGHT)
         {
             this->ball.velocity.x = -this->ball.velocity.x;
-            colX = true;
+            this->lastXCollision = GameStateRunning::XCollision::right;
         }
     }
 
-    if(!colX)
+    // side walls
+    if(ballPos.x <= Ball::RADIUS
+    && this->lastXCollision != GameStateRunning::XCollision::left)
     {
-        if(ballPos.x <= Ball::RADIUS
-        || ballPos.x >= this->window.getSize().x - Ball::RADIUS)
-        {
-            this->ball.velocity = {0.f, 0.f};
-        }
+        this->ball.velocity = {0.f, 0.f};
+        this->lastXCollision = GameStateRunning::XCollision::left;
+    }
+    else if(ballPos.x >= this->window.getSize().x - Ball::RADIUS
+    && this->lastXCollision != GameStateRunning::XCollision::right)
+    {
+        this->ball.velocity = {0.f, 0.f};
+        this->lastXCollision = GameStateRunning::XCollision::right;
     }
     
-    if(!colY)
+    // up/down walls
+    if(ballPos.y <= Ball::RADIUS
+    && this->lastYCollision != GameStateRunning::YCollision::up)
     {
-        if(ballPos.y <= Ball::RADIUS
-        && this->ball.velocity.y <= 0.f)
-        {
-            this->ball.velocity.y = -this->ball.velocity.y;
-        }
-        else if(ballPos.y >= this->window.getSize().y - Ball::RADIUS
-        && this->ball.velocity.y >= 0.f)
-        {
-            this->ball.velocity.y = -this->ball.velocity.y;
-        }
+        this->ball.velocity.y = -this->ball.velocity.y;
+        this->lastYCollision = GameStateRunning::YCollision::up;
+    }
+    else if(ballPos.y >= this->window.getSize().y - Ball::RADIUS
+    && this->lastYCollision != GameStateRunning::YCollision::down)
+    {
+        this->ball.velocity.y = -this->ball.velocity.y;
+        this->lastYCollision = GameStateRunning::YCollision::down;
     }
 }
 

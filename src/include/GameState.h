@@ -40,13 +40,14 @@ class GameStateAbstract
 class GameStateMenu : public GameStateAbstract
 {
     public:
-        static const std::vector<std::string> optionsText;
+        static const std::vector<std::string> mainMenuOptionsText;
+        static const std::vector<std::string> pauseMenuOptionsText;
         static const unsigned int FONT_SIZE;
         static const unsigned int DELIMETER_SIZE;
 
         GameStateMenu() = delete;
         GameStateMenu(const GameStateMenu& other) = default;
-        GameStateMenu(sf::RenderWindow& renderWindow, const bool isPauseMenu = false);
+        GameStateMenu(sf::RenderWindow& renderWindow, const bool isMainMenu = true, const std::vector<std::string> initOptions = GameStateMenu::mainMenuOptionsText);
         GameStateMenu& operator=(const GameStateMenu& other) = default;
         virtual ~GameStateMenu();
         virtual void reactToEvent(const sf::Event& event) override;
@@ -54,9 +55,12 @@ class GameStateMenu : public GameStateAbstract
         virtual void draw() const override;
 
     private:
-        std::vector<sf::Text> options;
         unsigned short idx;
-        bool pauseMenu;
+        bool mainMenu;
+        const std::vector<std::string> optionsText;
+        std::vector<sf::Text> options;
+
+        void chooseOption();
 };
 
 class GameStateRunning : public GameStateAbstract

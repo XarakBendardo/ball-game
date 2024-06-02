@@ -1,4 +1,5 @@
 #include <random>
+#include <iostream>
 #include "../include/GameState.h"
 #include "../include/gameconfig.h"
 #include "../include/SoundManager.h"
@@ -30,18 +31,19 @@ GameStateAbstract* GameStateAbstract::getNextState() const
 }
 
 /*---------------------------------------- MENU ----------------------------------------------*/
-const std::vector<std::string> GameStateMenu::optionsText = {"PLAY", "NEW GAME", "EXIT"};
+const std::vector<std::string> GameStateMenu::mainMenuOptionsText = {"NEW GAME", "EXIT"};
+const std::vector<std::string> GameStateMenu::pauseMenuOptionsText = {"RESTART", "NEW GAME", "EXIT"};
 const unsigned int GameStateMenu::FONT_SIZE = 100u;
 const unsigned int GameStateMenu::DELIMETER_SIZE = 100u;
 
-GameStateMenu::GameStateMenu(sf::RenderWindow& renderWindow, const bool isPauseMenu) :
-    GameStateAbstract(renderWindow), idx(0), pauseMenu(isPauseMenu)
+GameStateMenu::GameStateMenu(sf::RenderWindow& renderWindow, const bool isMainMenu, const std::vector<std::string> initOptions) :
+    GameStateAbstract(renderWindow), idx(0), mainMenu(isMainMenu), optionsText(initOptions)
 {
     size_t pos = 0;
     sf::Vector2f position;
-    unsigned int height = GameStateMenu::optionsText.size() * GameStateMenu::FONT_SIZE + (GameStateMenu::optionsText.size() - 1) * GameStateMenu::DELIMETER_SIZE;
+    unsigned int height = initOptions.size() * GameStateMenu::FONT_SIZE + (initOptions.size() - 1) * GameStateMenu::DELIMETER_SIZE;
     unsigned int top = (this->window.getSize().y - height) / 2;
-    for (const auto& option : GameStateMenu::optionsText)
+    for (const auto& option : initOptions)
     {
         sf::Text text(option, config::FONT, GameStateMenu::FONT_SIZE);
         position = {
@@ -69,39 +71,43 @@ void GameStateMenu::reactToEvent(const sf::Event& event)
         break;
 
     case sf::Keyboard::Up:
+        SoundManager::playSound(SoundManager::Sound::optionChange);
         if(this->idx > 0)
             --this->idx;
         else
             this->idx = static_cast<unsigned short>(this->options.size() - 1);
-        SoundManager::playSound(SoundManager::Sound::optionChange);
         break;
     
     case sf::Keyboard::Down:
+        SoundManager::playSound(SoundManager::Sound::optionChange);
         if(this->idx < static_cast<unsigned short>(this->options.size() - 1))
             ++this->idx;
         else
             this->idx = 0;
-        SoundManager::playSound(SoundManager::Sound::optionChange);
         break;
 
     case sf::Keyboard::Enter:
-        this->changeRequired = true;
-        this->finished = true;
-        if(this->optionsText[idx] == "PLAY")
-        {
-            if(!this->pauseMenu)
-                this->nextState = new GameStateRunning(this->window);
-        }
-        else if(this->optionsText[idx] == "NEW GAME")
-            this->nextState = new GameStateRunning(this->window);
-        else if(this->optionsText[idx] == "EXIT")
-            this->window.close();
         SoundManager::playSound(SoundManager::Sound::optionChoose);
+        this->chooseOption();
         break;
     
     default:
         break;
     }
+}
+
+void GameStateMenu::chooseOption()
+{
+    this->changeRequired = true;
+    this->finished = true;
+    if(this->optionsText[idx] == "RESTART")
+    {
+        
+    }
+    else if(this->optionsText[idx] == "NEW GAME")
+        this->nextState = new GameStateRunning(this->window);
+    else if(this->optionsText[idx] == "EXIT")
+        this->window.close();
 }
 
 void GameStateMenu::update()
@@ -155,7 +161,7 @@ void GameStateRunning::reactToEvent(const sf::Event& event)
         {
         case sf::Keyboard::Escape:
             this->changeRequired = true;
-            this->nextState = new GameStateMenu(this->window, true);
+            this->nextState = new GameStateMenu(this->window, false, GameStateMenu::pauseMenuOptionsText);
             break;
 
         case sf::Keyboard::Up:

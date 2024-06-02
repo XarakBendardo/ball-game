@@ -23,4 +23,4 @@ add_executable(BallGame ${SOURCES})
 target_compile_options(BallGame PRIVATE -Wall -Wextra -Wpedantic)
 target_compile_options(BallGame PRIVATE -Werror)
 
-target_link_libraries(BallGame sfml-system sfml-window sfml-graphics sfml-audio)
+target_link_libraries(BallGame sfml-system sfml-window sfml-graphics sfml-audio boost_filesystem boost_system dl)

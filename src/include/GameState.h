@@ -90,7 +90,8 @@ class GameStateRunning : public GameStateAbstract
         XCollision lastXCollision;
         YCollision lastYCollision;
         unsigned long scoreCount;
-        sf::Text score;
+        sf::Text score, gameOverPromt;
+        bool gameOver;
 
         void moveBoards(const float diff);
         void checkCollisions();

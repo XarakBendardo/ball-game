@@ -136,13 +136,19 @@ GameStateRunning::GameStateRunning(sf::RenderWindow& renderWindow) :
     currentMovement(GameStateRunning::BoardsMovement::none),
     lastXCollision(GameStateRunning::XCollision::none),
     lastYCollision(GameStateRunning::YCollision::none),
-    scoreCount(0)
+    scoreCount(0),
+    gameOver(false)
 {
     this->ball = Ball(this->window.getSize().x / 2 - Ball::RADIUS, this->window.getSize().y / 2 - Ball::RADIUS);
     this->leftBoard = Board(0.f, (this->window.getSize().y - Board::HEIGHT) / 2);
     this->rightBoard = Board(this->window.getSize().x - Board::WIDTH, (this->window.getSize().y - Board::HEIGHT) / 2);
     this->score = {std::string("SCORE: ") + std::to_string(scoreCount), config::FONT, 40u};
     this->score.setPosition(0, 0);
+    this->gameOverPromt = {std::string("GAME OVER!"), config::FONT, 120u};
+    this->gameOverPromt.setPosition(
+        (this->window.getSize().x - this->gameOverPromt.getGlobalBounds().width) / 2,
+        (this->window.getSize().y - this->gameOverPromt.getGlobalBounds().height) / 2);
+    this->gameOverPromt.setFillColor(sf::Color::Red);
 }
 
 GameStateRunning::~GameStateRunning() {}
@@ -247,6 +253,7 @@ void GameStateRunning::checkCollisions()
     if(ballPos.x <= Ball::RADIUS
     && this->lastXCollision != GameStateRunning::XCollision::left)
     {
+        this->gameOver = true;
         this->ball.velocity = {0.f, 0.f};
         this->lastXCollision = GameStateRunning::XCollision::left;
         SoundManager::playSound(SoundManager::Sound::ballRebound);
@@ -254,6 +261,7 @@ void GameStateRunning::checkCollisions()
     else if(ballPos.x >= this->window.getSize().x - Ball::RADIUS
     && this->lastXCollision != GameStateRunning::XCollision::right)
     {
+        this->gameOver = true;
         this->ball.velocity = {0.f, 0.f};
         this->lastXCollision = GameStateRunning::XCollision::right;
         SoundManager::playSound(SoundManager::Sound::ballRebound);
@@ -280,7 +288,7 @@ void GameStateRunning::checkCollisions()
 }
 
 void GameStateRunning::update()
-{
+{   
     this->dt = this->clock.restart().asSeconds();
     float newPos;
     switch (this->currentMovement)
@@ -311,6 +319,8 @@ void GameStateRunning::draw() const
     this->window.draw(this->rightBoard);
     this->window.draw(this->ball);
     this->window.draw(this->score);
+    if(this->gameOver)
+        this->window.draw(this->gameOverPromt);
 }
 
 } // namespace engine

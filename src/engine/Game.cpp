@@ -30,7 +30,7 @@ Game::Game()
         {sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height},
         "Ball Game",
         sf::Style::Fullscreen};
-    this->window->setFramerateLimit(config::FPSLimit);
+    // this->window->setFramerateLimit(config::FPSLimit);
     this->currentState = new GameStateMenu(*this->window);
     this->stateStack.push(this->currentState);
 }
